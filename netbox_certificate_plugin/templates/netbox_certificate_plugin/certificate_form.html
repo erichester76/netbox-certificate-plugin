@@ -9,43 +9,14 @@
 
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            
-            {# Common Name with "Fetch Certificate" button #}
-            <div class="form-group">
-                <label for="id_common_name">Common Name</label>
-                <input type="text" id="id_common_name" name="common_name" class="form-control" value="{{ form.common_name.value }}">
-                <button type="button" id="fetch-cert-btn" class="btn btn-primary">Fetch Certificate</button>
-            </div>
 
-            {# Certificate Authority #}
-            <div class="form-group">
-                <label for="id_certificate_authority">Certificate Authority</label>
-                {{ form.certificate_authority }}
-            </div>
-
-            {# Serial Number #}
-            <div class="form-group">
-                <label for="id_serial_number">Serial Number</label>
-                <input type="text" id="id_serial_number" name="serial_number" class="form-control" value="{{ form.serial_number.value }}">
-            </div>
-
-            {# Expiration Date #}
-            <div class="form-group">
-                <label for="id_expiration_date">Expiration Date</label>
-                <input type="date" id="id_expiration_date" name="expiration_date" class="form-control" value="{{ form.expiration_date.value }}">
-            </div>
-
-            {# SANs #}
-            <div class="form-group">
-                <label for="id_san">Subject Alternative Names (SAN)</label>
-                {{ form.san }}
-            </div>
-
-            {# Issue Date #}
-            <div class="form-group">
-                <label for="id_issue_date">Issue Date</label>
-                {{ form.issue_date }}
-            </div>
+            {# Iterate through all form fields dynamically #}
+            {% for field in form %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                </div>
+            {% endfor %}
 
             {# Form buttons (Save, Cancel) #}
             <div class="form-group">
