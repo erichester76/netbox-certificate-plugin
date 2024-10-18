@@ -5,7 +5,7 @@ import ssl
 import socket
 from datetime import datetime
 from OpenSSL import crypto  # To process certificates
-from utilities.relations import get_related_models
+import utilities.relations
 
 
 def fetch_certificate(request):
@@ -81,7 +81,7 @@ class CertificateView(generic.ObjectView):
     def get_extra_context(self, request, instance):
 
         return {
-            'related_models': self.get_related_models(request,instance),
+            'related_models': get_related_models(request,instance),
         }
 
 class CertificateCreateView(generic.ObjectEditView):
@@ -114,7 +114,7 @@ class CertificateAuthorityView(generic.ObjectView):
     def get_extra_context(self, request, instance):
  
         return {
-            'related_models': self.get_related_models(request,instance),
+            'related_models': get_related_models(request,instance),
         }
 
 class CertificateAuthorityCreateView(generic.ObjectEditView):
@@ -146,7 +146,7 @@ class HostnameView(generic.ObjectView):
         related_certificates = models.CertificateHostnameRelationship.objects.filter(hostname=instance).select_related('certificate')
 
         return {
-            'related_models': self.get_related_models(request,instance),
+            'related_models': get_related_models(request,instance),
             'related_certificates': related_certificates,
         }
 
