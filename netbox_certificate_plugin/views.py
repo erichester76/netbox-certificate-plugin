@@ -4,35 +4,69 @@ from django.http import JsonResponse
 import ssl
 import socket
 from datetime import datetime
+from OpenSSL import crypto  # To process certificates
 
 def fetch_certificate(request):
+    """
+    This view fetches certificate data from the given common name.
+    """
     common_name = request.GET.get('common_name')
-    
+
     if not common_name:
-        return JsonResponse({"error": "Common name is required"}, status=400)
+        return JsonResponse({'error': 'Common Name is required'}, status=400)
 
     try:
-        # Fetch the certificate for the domain
-        context = ssl.create_default_context()
-        with socket.create_connection((common_name, 443)) as sock:
-            with context.wrap_socket(sock, server_hostname=common_name) as ssock:
-                cert = ssock.getpeercert()
+        cert_data = ssl.get_server_certificate((common_name, 443))  
+        x509 = crypto.load_certificate(crypto.FILETYPE_PEM, cert_data)
+        
+        # Extract data from the certificate
+        issued_to = x509.get_subject().CN  # Common Name
+        issued_by = x509.get_issuer().CN  # Issuer CN
+        serial_number = x509.get_serial_number()  # Serial Number
+        expiration_date = x509.get_notAfter().decode('utf-8')  # Expiration date in bytes
+        issue_date = x509.get_notBefore().decode('utf-8')  # Issue date in bytes
+        fingerprint = x509.digest('sha256').decode('utf-8')  # Fingerprint using SHA-256
+        san_extension = None
+        wildcard = False
 
-        # Parse the certificate fields
-        issued_to = dict(x[0] for x in cert['subject'])['commonName']
-        issued_by = dict(x[0] for x in cert['issuer'])['commonName']
-        serial_number = cert['serialNumber']
-        expiration_date = datetime.strptime(cert['notAfter'], '%b %d %H:%M:%S %Y GMT')
+        # Extract SANs (Subject Alternative Names) if present
+        for i in range(x509.get_extension_count()):
+            ext = x509.get_extension(i)
+            if 'subjectAltName' in str(ext.get_short_name()):
+                san_extension = ext
+                break
 
+        san_names = []
+        if san_extension:
+            san_names = [name[4:] for name in str(san_extension).split(", ") if name.startswith('DNS:')]
+
+        # Determine the certificate type
+        certificate_type = 'standard'  # Default to 'standard'
+        if '*' in issued_to:
+            wildcard = True
+            certificate_type = 'wildcard'
+        elif len(san_names) > 1:
+            certificate_type = 'multi-domain'
+
+        # Format the expiration date to a readable format
+        expiration_date = f"{expiration_date[:4]}-{expiration_date[4:6]}-{expiration_date[6:8]}"
+        issue_date = f"{issue_date[:4]}-{issue_date[4:6]}-{issue_date[6:8]}"
+
+        # Return the extracted data as a JSON response
         return JsonResponse({
-            "issued_to": issued_to,
-            "issued_by": issued_by,
-            "serial_number": serial_number,
-            "expiration_date": expiration_date,
+            'issued_to': issued_to,
+            'issued_by': issued_by,
+            'serial_number': serial_number,
+            'expiration_date': expiration_date,
+            'issue_date': issue_date,
+            'wildcard': wildcard,
+            'certificate_type': certificate_type,
+            'san_names': san_names,
+            'fingerprint': fingerprint,  # Return the fingerprint
         })
 
     except Exception as e:
-        return JsonResponse({"error": str(e)}, status=500)
+        return JsonResponse({'error': str(e)}, status=500)
 
 class CertificateListView(generic.ObjectListView):
     queryset =models.Certificate.objects.all().order_by('expiration_date')  # Sort by expiration date
