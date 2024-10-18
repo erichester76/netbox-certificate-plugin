@@ -75,8 +75,8 @@ class HostnameForm(forms.ModelForm):
 
     class Meta:
         model = models.Hostname
-        fields = ['name', 'tenant', 'certificates']  # Include 'certificates' in the fields
-
+        fields = ['name', 'tenant', 'certificates']  
+    """ 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -84,7 +84,7 @@ class HostnameForm(forms.ModelForm):
         if self.instance and self.instance.pk:
             self.fields['certificates'].queryset = models.Certificate.objects.all()  # Ensure all certificates are available
             self.fields['certificates'].initial = self.instance.certificates.all()  # Prepopulate the field with related certificates
-
+    """
     def save(self, commit=True):
         """
         Override save to handle the certificate-hostname relationships.
