@@ -16,14 +16,14 @@ class CertificateTable(NetBoxTable):
         
     def render_expiration_date(self, value):
         # Highlight certificates expiring within 30 days
-        if value and (value - now().date()).days <= 30:
+        if value and (value - now().date()).days <= 365:
             return format_html('<span class="text-danger">{}</span>', value)
         return value
 
     class Meta(NetBoxTable.Meta):
         model = Certificate
-        fields = ('common_name', 'expiration_date', 'certificate_type')
-        default_columns = ('common_name', 'expiration_date', 'certificate_type')
+        fields = ('common_name', 'expiration_date', 'type')
+        default_columns = ('common_name', 'type', 'expiration_date')
         order_by = ('expiration_date',)  # Default sort by expiration date
 
 
