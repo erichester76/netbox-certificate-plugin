@@ -57,6 +57,15 @@ function fetchCertificate() {
         return;
     }
 
+    function selectDropdownValue(fieldId, value) {
+    const field = document.getElementById(fieldId);
+    for (let i = 0; i < field.options.length; i++) {
+        if (field.options[i].value === value) {
+            field.options[i].selected = true;
+            break;
+        }
+    }
+}
     fetch(`/plugins/netbox_certificate_plugin/fetch-certificate/?common_name=${commonName}`)
         .then(response => response.json())
         .then(data => {
@@ -70,7 +79,7 @@ function fetchCertificate() {
                 document.getElementById('id_expiration_date').value = data.expiration_date;
                 document.getElementById('id_issue_date').value = data.issue_date;
                 document.getElementById('id_wildcard').checked = data.wildcard;
-                document.getElementById('id_type').value = data.type;
+                selectDropdownValue('id_type', data.type);
                 document.getElementById('id_san').value = data.san_names.join(', ');
                 document.getElementById('id_fingerprint').value = data.fingerprint;
             }

@@ -42,7 +42,7 @@ def fetch_certificate(request):
 
         # Determine the certificate type
         type = 'standard'  # Default to 'standard'
-        if '*' in issued_to:
+        if '*' in san_names:
             wildcard = True
             type = 'wildcard'
         elif len(san_names) > 1:
