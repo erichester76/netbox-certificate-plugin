@@ -3,6 +3,7 @@ from netbox.tables import NetBoxTable
 from django.utils.html import format_html
 from .models import Certificate, CertificateAuthority, Hostname
 from django.utils.timezone import now
+from django.template.defaultfilters import date as date_filter
 
 class CertificateTable(NetBoxTable):
     certificate_authority = tables.Column(linkify=True)
@@ -18,7 +19,7 @@ class CertificateTable(NetBoxTable):
         formatted_date = date_filter(value, "F d, Y")  # e.g., "October 10, 2024"
         
         # Highlight certificates expiring within 30 days
-        if value and (value - now().date()).days <= 30:
+        if value and (value - now().date()).days <= 90:
             return format_html('<span class="text-danger">{}</span>', formatted_date)
         
         return formatted_date
