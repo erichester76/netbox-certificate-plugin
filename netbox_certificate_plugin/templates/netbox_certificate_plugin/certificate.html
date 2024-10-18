@@ -17,7 +17,35 @@
         </table>
       </div>
       {% include 'inc/panels/custom_fields.html' %}
-      {% include 'inc/panels/related_objects.html' %}
+      <div class="card">
+        <h5 class="card-header">Related Hostnames</h5>
+        <div class="card-body">
+            {% if object.hostnames.all %}
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>FQDN</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for certificate in object.certificates.all %}
+                            <tr>
+                                <td>
+                                    <a href="{% url 'plugins:netbox_certificate_plugin:hostname' pk=hostname.pk %}">
+                                        {{ hostname.name }}
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="{% url 'plugins:netbox_certificate_plugin:hostname_changelog' pk=hostname.pk %}" class="btn btn-sm btn-info">View Change Log</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No related hostnames found.</p>
+            {% endif %}
+        </div>
     </div>
     <div class="col col-md-6">
       {% include 'inc/panels/tags.html' %}
