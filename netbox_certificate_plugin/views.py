@@ -5,10 +5,7 @@ import ssl
 import socket
 from datetime import datetime
 from OpenSSL import crypto  # To process certificates
-from netbox.relations import get_related_models
 from django.db.models import ManyToOneRel
-
-
 
 def get_related_models(model, ordered=True):
     """
