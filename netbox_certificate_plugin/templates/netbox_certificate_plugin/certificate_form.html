@@ -41,13 +41,13 @@
   </div>
 <script>
 document.getElementById('id_common_name').addEventListener('blur', fetchCertificate);
-document.getElementById('id_common_name').addEventListener('keydown', function (event) {
+/* document.getElementById('id_common_name').addEventListener('keydown', function (event) {
     // Trigger on Enter or Tab
     if (event.key === 'Enter' || event.key === 'Tab') {
         event.preventDefault();  // Prevent form submission or focus change on Enter
         fetchCertificate();
     }
-});
+}); */
 
 function fetchCertificate() {
     const commonName = document.getElementById('id_common_name').value;
@@ -73,7 +73,7 @@ function fetchCertificate() {
         }
     }
     }
-        
+
     fetch(`/plugins/netbox_certificate_plugin/fetch-certificate/?common_name=${commonName}`)
         .then(response => response.json())
         .then(data => {
