@@ -13,6 +13,9 @@ authors = [
 ]
 description = "NetBox plugin for Certificate Management."
 readme = "README.md"
+dependencies = [
+    "pyOpenSSL>=23.1.1",
+]
 
 classifiers=[
     'Development Status :: 3 - Alpha',
