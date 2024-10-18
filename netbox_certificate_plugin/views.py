@@ -28,29 +28,30 @@ def fetch_certificate(request):
         expiration_date = x509.get_notAfter().decode('utf-8')  # Expiration date in bytes
         issue_date = x509.get_notBefore().decode('utf-8')  # Issue date in bytes
         fingerprint = x509.digest('sha256').decode('utf-8')  # Fingerprint using SHA-256
-        san_extension = None
-        wildcard = False
-
         # Extract SANs (Subject Alternative Names) if present
+        san_names = []
         for i in range(x509.get_extension_count()):
             ext = x509.get_extension(i)
-            if 'subjectAltName' in str(ext.get_short_name()):
+            if ext.get_short_name().decode('utf-8') == 'subjectAltName':
                 san_extension = ext
+                san_names = [name[4:] for name in str(san_extension).split(", ") if name.startswith('DNS:')]
                 break
 
-        san_names = []
-        if san_extension:
-            san_names = [name[4:] for name in str(san_extension).split(", ") if name.startswith('DNS:')]
-
         # Determine the certificate type
-        type = 'standard'  # Default to 'standard'
-        if '*' in san_names[1]:
+        wildcard = False
+        cert_type = 'standard'  # Default to 'standard'
+        
+        # Check for wildcards in both issued_to and SANs
+        if '*' in issued_to:
             wildcard = True
-            issued_to = san_names[1]
-            type = 'wildcard'
+            cert_type = 'wildcard'
+        elif any('*' in san for san in san_names):
+            wildcard = True
+            issued_to = next(san for san in san_names if '*' in san)  # Set issued_to to the wildcard from SANs
+            cert_type = 'wildcard'
         elif len(san_names) > 1:
-            type = 'multi-domain'
-
+            cert_type = 'multi-domain'
+            
         # Format the expiration date to a readable format
         expiration_date = f"{expiration_date[:4]}-{expiration_date[4:6]}-{expiration_date[6:8]}"
         issue_date = f"{issue_date[:4]}-{issue_date[4:6]}-{issue_date[6:8]}"
@@ -63,7 +64,7 @@ def fetch_certificate(request):
             'expiration_date': expiration_date,
             'issue_date': issue_date,
             'wildcard': wildcard,
-            'type': type,
+            'type': cert_type,
             'san_names': san_names,
             'fingerprint': fingerprint,  # Return the fingerprint
         })
