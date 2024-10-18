@@ -140,6 +140,7 @@ class HostnameView(generic.ObjectView):
 class HostnameCreateView(generic.ObjectEditView):
     queryset = models.Hostname.objects.all()
     form = forms.HostnameForm
+    template_name = 'netbox_certificate_plugin/hostname_form.html'
 
 class HostnameEditView(generic.ObjectEditView):
     queryset = models.Hostname.objects.all()

@@ -6,11 +6,6 @@ from . import models
 
 class CertificateForm(forms.ModelForm):
     
-    
-    class Meta:
-        model = models.Certificate
-        fields = ['common_name', 'type', 'wildcard', 'san', 'certificate_authority', 'tenant', 'issue_date', 'expiration_date', 'fingerprint'] 
-
     common_name = forms.CharField(
         label='Common Name',
         max_length=255,
@@ -46,6 +41,10 @@ class CertificateForm(forms.ModelForm):
         help_text='The expiration date of the certificate.'
     )
 
+    class Meta:
+        model = models.Certificate
+        fields = ['common_name', 'type', 'wildcard', 'san', 'certificate_authority', 'tenant', 'issue_date', 'expiration_date', 'fingerprint'] 
+
     def clean(self):
         cleaned_data = super().clean()
         common_name = cleaned_data.get('common_name')
@@ -59,11 +58,13 @@ class CertificateForm(forms.ModelForm):
         return cleaned_data
     
 class CertificateAuthorityForm(NetBoxModelForm):
+   
     class Meta:
         model = models.CertificateAuthority
         fields = ['name', 'managed_by', 'url', 'contact_email', 'phone_number', 'renewal_url', 'auto_renew', 'acme_endpoint', 'acme_account', 'notes']
 
 class HostnameForm(forms.ModelForm):
+   
     certificates = forms.ModelMultipleChoiceField(
         queryset=models.Certificate.objects.all(),
         required=False,
