@@ -70,12 +70,11 @@ class HostnameForm(forms.ModelForm):
         required=False,
         label='Associated Certificate',
         help_text='Select the certificate associated with this hostname.',
-        #widget=forms.SelectMultiple(attrs={'class': 'form-control'})
     )
 
     class Meta:
         model = models.Hostname
-        fields = ['name', 'tenant', 'certificates']  
+        fields = ['name', 'tenant', 'certificatexx']  
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -95,11 +94,11 @@ class HostnameForm(forms.ModelForm):
 
         if commit:
             instance.save()
-            self.save_certificates(instance)
+            self.save_certificate(instance)
 
         return instance
 
-    def save_certificates(self, instance):
+    def save_certificate(self, instance):
         # Clear existing relationships
         models.CertificateHostnameRelationship.objects.filter(hostname=instance).delete()
 
