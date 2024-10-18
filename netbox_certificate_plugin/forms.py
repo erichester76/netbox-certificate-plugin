@@ -68,23 +68,22 @@ class HostnameForm(forms.ModelForm):
     certificate = forms.ModelChoiceField(
         queryset=models.Certificate.objects.all(),
         required=False,
-        label='Associated Certificates',
-        help_text='Select the certificates associated with this hostname.',
+        label='Associated Certificate',
+        help_text='Select the certificate associated with this hostname.',
         #widget=forms.SelectMultiple(attrs={'class': 'form-control'})
     )
 
     class Meta:
         model = models.Hostname
         fields = ['name', 'tenant', 'certificates']  
-    """ 
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         # If editing an existing hostname, prepopulate certificates based on relationships
         if self.instance and self.instance.pk:
-            self.fields['certificates'].queryset = models.Certificate.objects.all()  # Ensure all certificates are available
-            self.fields['certificates'].initial = self.instance.certificates.all()  # Prepopulate the field with related certificates
-    """
+            self.fields['certificate'].initial =  models.CertificateHostnameRelationship.objects.filter(hostname=self.instance)
+
     def save(self, commit=True):
         """
         Override save to handle the certificate-hostname relationships.
