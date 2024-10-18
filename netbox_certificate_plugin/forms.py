@@ -70,7 +70,7 @@ class HostnameForm(forms.ModelForm):
         required=False,
         label='Associated Certificates',
         help_text='Select the certificates associated with this hostname.',
-        widget=forms.SelectMultiple(attrs={'class': 'form-control'})
+        #widget=forms.SelectMultiple(attrs={'class': 'form-control'})
     )
 
     class Meta:
