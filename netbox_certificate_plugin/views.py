@@ -44,6 +44,7 @@ class CertificateView(generic.ObjectView):
 class CertificateCreateView(generic.ObjectEditView):
     queryset = models.Certificate.objects.all()
     form = forms.CertificateForm
+    template_name = 'netbox_certificate_plugin/certificate_form.html'
 
 class CertificateEditView(generic.ObjectEditView):
     queryset = models.Certificate.objects.all()

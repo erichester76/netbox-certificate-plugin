@@ -5,30 +5,17 @@ from . import models
 
 
 class CertificateForm(forms.ModelForm):
+    
+    
     class Meta:
         model = models.Certificate
-        fields = ['common_name', 'certificate_authority', 'serial_number', 'san', 'issue_date', 'expiration_date']
+        fields = ['common_name', 'type', 'wildcard', 'san', 'certificate_authority', 'tenant', 'issue_date', 'expiration_date', 'fingerprint'] 
 
     common_name = forms.CharField(
         label='Common Name',
         max_length=255,
         help_text='The fully qualified domain name (FQDN) for the certificate.'
     )
-    
-    certificate_authority = forms.ModelChoiceField(
-        queryset=models.CertificateAuthority.objects.all(),
-        label='Certificate Authority',
-        help_text='The certificate authority that issued the certificate.',
-        widget=forms.Select()
-    )
-
-    serial_number = forms.CharField(
-        label='Serial Number',
-        max_length=100,
-        required=False,
-        help_text='The serial number of the certificate.'
-    )
-
     san = forms.ModelMultipleChoiceField(
         queryset=models.Hostname.objects.all(),
         required=False,
@@ -36,13 +23,23 @@ class CertificateForm(forms.ModelForm):
         help_text='The Subject Alternative Names (SAN) for this certificate.',
         widget=forms.SelectMultiple(attrs={'class': 'form-control'})
     )
-
+    certificate_authority = forms.ModelChoiceField(
+        queryset=models.CertificateAuthority.objects.all(),
+        label='Certificate Authority',
+        help_text='The certificate authority that issued the certificate.',
+        widget=forms.Select()
+    )
+    serial_number = forms.CharField(
+        label='Serial Number',
+        max_length=100,
+        required=False,
+        help_text='The serial number of the certificate.'
+    )
     issue_date = forms.DateField(
         label='Issue Date',
         widget=forms.DateInput(attrs={'type': 'date'}),
         help_text='The date when the certificate was issued.'
     )
-
     expiration_date = forms.DateField(
         label='Expiration Date',
         widget=forms.DateInput(attrs={'type': 'date'}),

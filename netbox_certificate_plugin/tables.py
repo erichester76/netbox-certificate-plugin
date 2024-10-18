@@ -2,6 +2,7 @@ import django_tables2 as tables
 from netbox.tables import NetBoxTable
 from django.utils.html import format_html
 from .models import Certificate, CertificateAuthority, Hostname
+from django.utils.timezone import now
 
 class CertificateTable(NetBoxTable):
     name = tables.Column(linkify=True)
