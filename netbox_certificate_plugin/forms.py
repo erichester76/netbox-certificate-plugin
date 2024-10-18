@@ -104,12 +104,11 @@ class HostnameForm(forms.ModelForm):
         models.CertificateHostnameRelationship.objects.filter(hostname=instance).delete()
 
         # Create new relationships
-        certificates = self.cleaned_data.get('certificates')
-        for cert in certificates:
-            relationship = models.CertificateHostnameRelationship(certificate=cert, hostname=instance)
-            relationship.full_clean()  # Ensure validation is applied
-            relationship.save()
-        
+        certificate = self.cleaned_data.get('certificate')
+        relationship = models.CertificateHostnameRelationship.objects.filter(hostname=self.instance)        
+        relationship.full_clean()  # Ensure validation is applied
+        relationship.save()
+    
 class CertificateImportForm(NetBoxModelImportForm):
     class Meta:
         model = models.Certificate
