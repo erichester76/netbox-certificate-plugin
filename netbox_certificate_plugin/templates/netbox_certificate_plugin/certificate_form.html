@@ -1,7 +1,43 @@
 {% extends 'generic/object_edit.html' %}
 
-{% block modals %}
-{% include 'inc/htmx_modal.html' with size='lg' %}
+{% block content %}
+  <div class="tab-pane show active" id="edit-form" role="tabpanel" aria-labelledby="object-list-tab">
+
+    {# Warn about missing prerequisite objects #}
+    {% if prerequisite_model %}
+      {% include 'inc/missing_prerequisites.html' %}
+    {% endif %}
+
+    <form action="" method="post" enctype="multipart/form-data" class="object-edit mt-5">
+      {% csrf_token %}
+
+      <div id="form_fields" hx-disinherit="hx-select hx-swap">
+        {% block form %}
+          {% include 'htmx/form.html' %}
+        {% endblock form %}
+      </div>
+
+      <div class="btn-float-group-right">
+        {% block buttons %}
+          <a href="{{ return_url }}" class="btn btn-outline-secondary btn-float">{% trans "Cancel" %}</a>
+          {% if object.pk %}
+            <button type="submit" name="_update" class="btn btn-primary">
+              {% trans "Save" %}
+            </button>
+          {% else %}
+            <div class="btn-group" role="group" aria-label="{% trans "Actions" %}">
+              <button type="submit" name="_create" class="btn btn-primary">
+                {% trans "Create" %}
+              </button>
+              <button type="submit" name="_addanother" class="btn btn-outline-primary btn-float">
+                {% trans "Create & Add Another" %}
+              </button>
+            </div>
+          {% endif %}
+        {% endblock buttons %}
+      </div>
+    </form>
+  </div>
 <script>
 document.getElementById('id_common_name').addEventListener('blur', fetchCertificate);
 /* document.getElementById('id_common_name').addEventListener('keydown', function (event) {
@@ -41,5 +77,5 @@ function fetchCertificate() {
         .catch(error => console.error('Error fetching certificate:', error));
 }
 </script>
-{% endblock %}
+{% endblock content %}
 
