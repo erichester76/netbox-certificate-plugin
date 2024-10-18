@@ -66,29 +66,36 @@ class CertificateAuthorityForm(NetBoxModelForm):
 class HostnameForm(forms.ModelForm):
    
     certificate = forms.ModelChoiceField(
-        queryset=models.Certificate.objects.all(),
+        queryset=models.Certificate.objects.all(),  # Single select dropdown for certificates
         required=False,
         label='Associated Certificate',
         help_text='Select the certificate associated with this hostname.',
+        widget=forms.Select(attrs={'class': 'form-control'})
     )
 
     class Meta:
         model = models.Hostname
-        fields = ['name', 'tenant', 'certificate']  
+        fields = ['name', 'tenant', 'certificate']  # Added 'certificate' field
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        
+        # Print/log to verify that certificates are being fetched
+        certificate_queryset = models.Certificate.objects.all()
+        print(f"Certificate queryset: {certificate_queryset}")  # For debugging purposes
+
+        # Ensure that all certificates are available in the dropdown
+        self.fields['certificate'].queryset = certificate_queryset
 
         # If editing an existing hostname, prepopulate certificate based on relationship
         if self.instance and self.instance.pk:
-            # Find the related certificate if one exists
             relationship = models.CertificateHostnameRelationship.objects.filter(hostname=self.instance).first()
             if relationship:
                 self.fields['certificate'].initial = relationship.certificate
-   
+
     def save(self, commit=True):
         """
-        Override save to handle the certificate-hostname relationships.
+        Override save to handle the certificate-hostname relationship.
         """
         instance = super().save(commit=False)
 
@@ -99,14 +106,15 @@ class HostnameForm(forms.ModelForm):
         return instance
 
     def save_certificate(self, instance):
-        # Clear existing relationships
+        # Clear existing relationship
         models.CertificateHostnameRelationship.objects.filter(hostname=instance).delete()
 
-        # Create new relationships
+        # Create new relationship if a certificate is selected
         certificate = self.cleaned_data.get('certificate')
-        relationship = models.CertificateHostnameRelationship(certificate=certificate, hostname=instance)
-        relationship.full_clean()  # Ensure validation is applied
-        relationship.save()
+        if certificate:
+            relationship = models.CertificateHostnameRelationship(certificate=certificate, hostname=instance)
+            relationship.full_clean()  # Ensure validation is applied
+            relationship.save()
     
 class CertificateImportForm(NetBoxModelImportForm):
     class Meta:
