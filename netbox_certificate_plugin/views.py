@@ -7,30 +7,6 @@ from datetime import datetime
 from OpenSSL import crypto  # To process certificates
 
 
-def get_related_objects(instance):
-    """
-    Fetch all related objects dynamically for the given instance.
-    """
-    related_objects = {}
-
-    for field in instance._meta.get_fields():
-        # Handle reverse relationships
-        if field.is_relation and field.auto_created and not field.concrete:
-            accessor_name = field.get_accessor_name()
-            related_queryset = getattr(instance, accessor_name).all()
-            if related_queryset.exists():
-                related_name = field.related_model._meta.verbose_name_plural
-                related_objects[related_name] = related_queryset
-
-        # Handle forward relationships (e.g., ForeignKey, OneToOne)
-        elif field.is_relation and not field.auto_created and field.related_model:
-            related_instance = getattr(instance, field.name, None)
-            if related_instance:
-                related_name = field.related_model._meta.verbose_name
-                related_objects[related_name] = [related_instance]
-
-    return related_objects
-
 def fetch_certificate(request):
     """
     This view fetches certificate data from the given common name.
@@ -102,9 +78,10 @@ class CertificateView(generic.ObjectView):
     queryset = models.Certificate.objects.all()
     
     def get_extra_context(self, request, instance):
-        related_objects = get_related_objects(instance)
+        related_models = self.get_related_models(request,instance)
+
         return {
-            'related_objects': related_objects,
+            'related_models': related_models,
         }
 
 class CertificateCreateView(generic.ObjectEditView):
@@ -135,9 +112,10 @@ class CertificateAuthorityView(generic.ObjectView):
     queryset = models.CertificateAuthority.objects.all()
     
     def get_extra_context(self, request, instance):
-        related_objects = get_related_objects(instance)
+        related_models = self.get_related_models(request,instance)
+
         return {
-            'related_objects': related_objects,
+            'related_models': related_models,
         }
 
 class CertificateAuthorityCreateView(generic.ObjectEditView):
@@ -176,12 +154,12 @@ class HostnameView(generic.ObjectView):
         }
         
     def get_extra_context(self, request, instance):
-        related_objects = get_related_objects(instance)
+        related_models = self.get_related_models(request,instance)
         related_certificates = models.CertificateHostnameRelationship.objects.filter(hostname=instance).select_related('certificate')
 
         return {
+            'related_models': related_models,
             'related_certificates': related_certificates,
-            'related_objects': related_objects,
         }
 
 class HostnameCreateView(generic.ObjectEditView):
