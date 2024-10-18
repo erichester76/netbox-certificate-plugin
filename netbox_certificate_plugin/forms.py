@@ -75,17 +75,15 @@ class HostnameForm(forms.ModelForm):
 
     class Meta:
         model = models.Hostname
-        fields = ['name', 'tenant']
+        fields = ['name', 'tenant', 'certificates']  # Include 'certificates' in the fields
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         # If editing an existing hostname, prepopulate certificates based on relationships
         if self.instance and self.instance.pk:
-            self.fields['certificates'].initial = models.Certificate.objects.filter(
-                hostname_relationships__hostname=self.instance
-            )
-        # Otherwise, leave the queryset to show all certificates
+            self.fields['certificates'].queryset = models.Certificate.objects.all()  # Ensure all certificates are available
+            self.fields['certificates'].initial = self.instance.certificates.all()  # Prepopulate the field with related certificates
 
     def save(self, commit=True):
         """
