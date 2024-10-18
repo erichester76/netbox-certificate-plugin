@@ -44,6 +44,7 @@ def fetch_certificate(request):
         type = 'standard'  # Default to 'standard'
         if '*' in san_names[1]:
             wildcard = True
+            issued_to = san_names[1]
             type = 'wildcard'
         elif len(san_names) > 1:
             type = 'multi-domain'
