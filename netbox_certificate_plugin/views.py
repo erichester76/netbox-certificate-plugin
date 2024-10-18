@@ -12,12 +12,23 @@ def get_related_objects(instance):
     Fetch all related objects dynamically for the given instance.
     """
     related_objects = {}
+
     for field in instance._meta.get_fields():
-        if field.is_relation and not field.auto_created:
-            related_name = field.related_model._meta.verbose_name_plural
-            related_queryset = getattr(instance, field.related_name_manager_cache).all()
+        # Handle reverse relationships
+        if field.is_relation and field.auto_created and not field.concrete:
+            accessor_name = field.get_accessor_name()
+            related_queryset = getattr(instance, accessor_name).all()
             if related_queryset.exists():
+                related_name = field.related_model._meta.verbose_name_plural
                 related_objects[related_name] = related_queryset
+
+        # Handle forward relationships (e.g., ForeignKey, OneToOne)
+        elif field.is_relation and not field.auto_created and field.related_model:
+            related_instance = getattr(instance, field.name, None)
+            if related_instance:
+                related_name = field.related_model._meta.verbose_name
+                related_objects[related_name] = [related_instance]
+
     return related_objects
 
 def fetch_certificate(request):
