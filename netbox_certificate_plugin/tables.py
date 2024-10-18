@@ -5,9 +5,8 @@ from .models import Certificate, CertificateAuthority, Hostname
 from django.utils.timezone import now
 
 class CertificateTable(NetBoxTable):
-    name = tables.Column(linkify=True)
     certificate_authority = tables.Column(linkify=True)
-    common_name = tables.Column()
+    common_name = tables.Column(linkify=True)
     expiration_date = tables.DateColumn()
 
     class Meta(NetBoxTable.Meta):
