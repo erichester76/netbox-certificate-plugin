@@ -2,6 +2,9 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    # Ajax certificate details fetch
+    path('fetch-certificate/', views.fetch_certificate, name='fetch_certificate'),
+
     # Certificate URLs
     path('certificates/', views.CertificateListView.as_view(), name='certificate_list'),
     path('certificates/add/', views.CertificateCreateView.as_view(), name='certificate_add'),

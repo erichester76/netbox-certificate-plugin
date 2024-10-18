@@ -1,0 +1,86 @@
+{% extends 'netbox/base.html' %}
+
+{% block content %}
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">{% block panel_title %}Certificate Form{% endblock %}</h3>
+    </div>
+    <div class="panel-body">
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            {# Common Name with "Fetch Certificate" button #}
+            <div class="form-group">
+                <label for="id_common_name">Common Name</label>
+                <input type="text" id="id_common_name" name="common_name" class="form-control" value="{{ form.common_name.value }}">
+                <button type="button" id="fetch-cert-btn" class="btn btn-primary">Fetch Certificate</button>
+            </div>
+
+            {# Certificate Authority #}
+            <div class="form-group">
+                <label for="id_certificate_authority">Certificate Authority</label>
+                {{ form.certificate_authority }}
+            </div>
+
+            {# Serial Number #}
+            <div class="form-group">
+                <label for="id_serial_number">Serial Number</label>
+                <input type="text" id="id_serial_number" name="serial_number" class="form-control" value="{{ form.serial_number.value }}">
+            </div>
+
+            {# Expiration Date #}
+            <div class="form-group">
+                <label for="id_expiration_date">Expiration Date</label>
+                <input type="date" id="id_expiration_date" name="expiration_date" class="form-control" value="{{ form.expiration_date.value }}">
+            </div>
+
+            {# SANs #}
+            <div class="form-group">
+                <label for="id_san">Subject Alternative Names (SAN)</label>
+                {{ form.san }}
+            </div>
+
+            {# Issue Date #}
+            <div class="form-group">
+                <label for="id_issue_date">Issue Date</label>
+                {{ form.issue_date }}
+            </div>
+
+            {# Form buttons (Save, Cancel) #}
+            <div class="form-group">
+                <button type="submit" class="btn btn-success">Save</button>
+                <a href="{% url 'plugins:netbox_certificate_plugin:certificate_list' %}" class="btn btn-default">Cancel</a>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+{# JavaScript to handle the AJAX fetch request #}
+<script>
+document.getElementById('fetch-cert-btn').addEventListener('click', function() {
+    const commonName = document.getElementById('id_common_name').value;
+
+    if (!commonName) {
+        alert("Please enter a common name.");
+        return;
+    }
+
+    fetch(`/plugins/netbox_certificate_plugin/fetch-certificate/?common_name=${commonName}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                alert(data.error);
+            } else {
+                // Populate the form fields with the fetched data
+                document.getElementById('id_common_name').value = data.issued_to;
+                document.getElementById('id_certificate_authority').value = data.issued_by;
+                document.getElementById('id_serial_number').value = data.serial_number;
+                document.getElementById('id_expiration_date').value = data.expiration_date;
+            }
+        })
+        .catch(error => console.error('Error fetching certificate:', error));
+});
+</script>
+{% endblock %}
