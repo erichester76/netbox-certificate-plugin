@@ -55,7 +55,7 @@ class CertificateEditView(generic.ObjectEditView):
 class CertificateDeleteView(generic.ObjectDeleteView):
     queryset = models.Certificate.objects.all()
 
-class CertificateImportView(ObjectBulkImportView):
+class CertificateImportView(generic.BulkImportView):
     queryset = models.Certificate.objects.all()
     model_form = forms.CertificateImportForm
 
@@ -79,7 +79,7 @@ class CertificateAuthorityEditView(generic.ObjectEditView):
 class CertificateAuthorityDeleteView(generic.ObjectDeleteView):
     queryset = models.CertificateAuthority.objects.all()
 
-class CertificateAuthorityImportView(ObjectBulkImportView):
+class CertificateAuthorityImportView(generic.BulkImportView):
     queryset = models.CertificateAuthority.objects.all()
     model_form = forms.CertificateAuthorityImportForm
 
@@ -103,7 +103,7 @@ class HostnameEditView(generic.ObjectEditView):
 class HostnameDeleteView(generic.ObjectDeleteView):
     queryset = models.Hostname.objects.all()
 
-class HostnameImportView(ObjectBulkImportView):
+class HostnameImportView(generic.BulkImportView):
     queryset = models.Hostname.objects.all()
     model_form = forms.HostnameImportForm
 
