@@ -1,6 +1,5 @@
 from netbox.views import generic
 from . import forms, models, tables
-from extras.views import ObjectBulkImportView, ObjectChangeLogView
 from django.http import JsonResponse
 import ssl
 import socket
