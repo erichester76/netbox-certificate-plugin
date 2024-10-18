@@ -5,7 +5,7 @@ import ssl
 import socket
 from datetime import datetime
 from OpenSSL import crypto  # To process certificates
-from netbox.utilities.relations import get_related_objects
+from utilities.relations import get_related_objects
 
 
 def fetch_certificate(request):
