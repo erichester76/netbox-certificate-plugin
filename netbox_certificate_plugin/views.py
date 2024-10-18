@@ -35,7 +35,7 @@ def fetch_certificate(request):
         return JsonResponse({"error": str(e)}, status=500)
 
 class CertificateListView(generic.ObjectListView):
-    queryset = models.Certificate.objects.all()
+    queryset =models.Certificate.objects.all().order_by('expiration_date')  # Sort by expiration date
     table = tables.CertificateTable
 
 class CertificateView(generic.ObjectView):
