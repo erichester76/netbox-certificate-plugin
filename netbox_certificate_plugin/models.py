@@ -52,7 +52,6 @@ class CertificateAuthority(NetBoxModel):
 
 class Certificate(NetBoxModel):
     # General fields
-    name = models.CharField(max_length=255, unique=True)
     type = models.CharField(
         max_length=30,
         choices=[

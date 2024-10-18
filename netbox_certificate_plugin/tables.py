@@ -12,7 +12,7 @@ class CertificateTable(NetBoxTable):
 
     class Meta(NetBoxTable.Meta):
         model = Certificate
-        fields = ('name', 'type', 'common_name', 'certificate_authority', 'expiration_date', 'fingerprint', 'tags')
+        fields = ('common_name', 'type', 'certificate_authority', 'expiration_date', 'fingerprint', 'tags')
         order_by = ('expiration_date',)  # Default sort by expiration date
         
     def render_expiration_date(self, value):
