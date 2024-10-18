@@ -1,6 +1,7 @@
 {% extends 'generic/object_edit.html' %}
 
-{% block title %}
+{% block modals %}
+{% include 'inc/htmx_modal.html' with size='lg' %}
 <script>
 document.getElementById('id_common_name').addEventListener('blur', fetchCertificate);
 /* document.getElementById('id_common_name').addEventListener('keydown', function (event) {
