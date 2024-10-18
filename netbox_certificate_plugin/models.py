@@ -39,6 +39,7 @@ class CertificateAuthority(NetBoxModel):
 
     class Meta:
         ordering = ['name']
+        verbose_name_plural = ('Certificate Authorities')
 
     def __str__(self):
         return self.name
