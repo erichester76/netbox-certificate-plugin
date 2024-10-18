@@ -59,13 +59,21 @@ function fetchCertificate() {
 
     function selectDropdownValue(fieldId, value) {
     const field = document.getElementById(fieldId);
-    for (let i = 0; i < field.options.length; i++) {
-        if (field.options[i].value === value) {
-            field.options[i].selected = true;
-            break;
+    
+    // Make sure to account for the field being a 'tomselect' dropdown
+    if (field.tomselect) {
+        field.tomselect.setValue(value);
+    } else {
+        // Fallback to regular select element behavior
+        for (let i = 0; i < field.options.length; i++) {
+            if (field.options[i].value === value) {
+                field.options[i].selected = true;
+                break;
+            }
         }
     }
-}
+    }
+        
     fetch(`/plugins/netbox_certificate_plugin/fetch-certificate/?common_name=${commonName}`)
         .then(response => response.json())
         .then(data => {
