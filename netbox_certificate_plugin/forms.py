@@ -68,7 +68,7 @@ class CertificateAuthorityForm(NetBoxModelForm):
 
 class HostnameForm(forms.ModelForm):
     certificates = forms.ModelMultipleChoiceField(
-        queryset=models.ertificate.objects.all(),
+        queryset=models.Certificate.objects.all(),
         required=False,
         label='Associated Certificates',
         help_text='Select the certificates associated with this hostname.',
