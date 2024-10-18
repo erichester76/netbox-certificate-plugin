@@ -16,7 +16,7 @@ class CertificateTable(NetBoxTable):
         
     def render_expiration_date(self, value):
         # Highlight certificates expiring within 30 days
-        if value and (value - now().date()).days <= 365:
+        if value and (value - now().date()).days <= 30:
             return format_html('<span class="text-danger">{}</span>', value)
         return value
 
