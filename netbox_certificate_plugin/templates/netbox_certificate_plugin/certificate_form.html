@@ -7,27 +7,44 @@
     </div>
     <div class="panel-body">
 
-        <form method="post" enctype="multipart/form-data">
+        <form method="post" enctype="multipart/form-data" class="form-horizontal">
             {% csrf_token %}
 
-            {# Iterate through all form fields dynamically #}
-            {% for field in form %}
-                <div class="form-group">
-                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                    {{ field }}
+            {# Common Name with "Fetch Certificate" button #}
+            <div class="form-group">
+                <label for="id_common_name" class="col-sm-2 control-label">Common Name</label>
+                <div class="col-sm-10">
+                    {{ form.common_name }}
+                    <button type="button" id="fetch-cert-btn" class="btn btn-primary">Fetch Certificate</button>
                 </div>
+            </div>
+
+            {# Render remaining fields dynamically #}
+            {% for field in form %}
+                {% if field.name != "common_name" %}  {# Skip the common name since it's handled above #}
+                    <div class="form-group">
+                        <label for="id_{{ field.name }}" class="col-sm-2 control-label">{{ field.label }}</label>
+                        <div class="col-sm-10">
+                            {{ field }}
+                            {% if field.help_text %}
+                                <span class="help-block">{{ field.help_text }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
             {% endfor %}
 
             {# Form buttons (Save, Cancel) #}
             <div class="form-group">
-                <button type="submit" class="btn btn-success">Save</button>
-                <a href="{% url 'plugins:netbox_certificate_plugin:certificate_list' %}" class="btn btn-default">Cancel</a>
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-success">Save</button>
+                    <a href="{% url 'plugins:netbox_certificate_plugin:certificate_list' %}" class="btn btn-default">Cancel</a>
+                </div>
             </div>
         </form>
 
     </div>
 </div>
-
 {# JavaScript to handle the AJAX fetch request #}
 <script>
 document.getElementById('fetch-cert-btn').addEventListener('click', function() {
