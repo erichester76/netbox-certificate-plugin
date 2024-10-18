@@ -5,7 +5,7 @@ import ssl
 import socket
 from datetime import datetime
 from OpenSSL import crypto  # To process certificates
-from utilities.relations import get_related_objects
+from utilities.relations import get_related_models
 
 
 def fetch_certificate(request):
