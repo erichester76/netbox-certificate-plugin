@@ -1,5 +1,6 @@
 {% extends 'generic/object_edit.html' %}
 
+{% block content %}
 {# JavaScript to handle the AJAX fetch request #}
 <script>
 document.getElementById('id_common_name').addEventListener('blur', fetchCertificate);
@@ -31,21 +32,14 @@ function fetchCertificate() {
                 document.getElementById('id_serial_number').value = data.serial_number;
                 document.getElementById('id_expiration_date').value = data.expiration_date;
                 document.getElementById('id_issue_date').value = data.issue_date;
-
-                // Populate the wildcard field (assuming it's a checkbox)
                 document.getElementById('id_wildcard').checked = data.wildcard;
-
-                // Populate the certificate type (assuming it's a dropdown/select)
                 document.getElementById('id_type').value = data.type;
-
-                // Populate the SAN field (assuming it's a text input or textarea)
                 document.getElementById('id_san').value = data.san_names.join(', ');
-
-                // Populate the fingerprint field
                 document.getElementById('id_fingerprint').value = data.fingerprint;
             }
         })
         .catch(error => console.error('Error fetching certificate:', error));
 }
-
 </script>
+{% endblock %}
+
