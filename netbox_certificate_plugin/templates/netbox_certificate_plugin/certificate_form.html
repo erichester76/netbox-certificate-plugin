@@ -10,29 +10,92 @@
         <form method="post" enctype="multipart/form-data" class="form-horizontal">
             {% csrf_token %}
 
-            {# Common Name with "Fetch Certificate" button #}
-            <div class="form-group">
-                <label for="id_common_name" class="col-sm-2 control-label">Common Name</label>
-                <div class="col-sm-10">
-                    {{ form.common_name }}
-                    <button type="button" id="fetch-cert-btn" class="btn btn-primary">Fetch Certificate</button>
+            {# General Information Card #}
+            <div class="card">
+                <div class="card-header">
+                    General Information
+                </div>
+                <div class="card-body">
+                    {# Common Name with "Fetch Certificate" button #}
+                    <div class="form-group">
+                        <label for="id_common_name" class="control-label col-sm-2">Common Name</label>
+                        <div class="col-sm-8">
+                            {{ form.common_name|add_class:"form-control" }}
+                        </div>
+                        <div class="col-sm-2">
+                            <button type="button" id="fetch-cert-btn" class="btn btn-primary">Fetch Certificate</button>
+                        </div>
+                    </div>
+
+                    {# Certificate Authority #}
+                    <div class="form-group">
+                        <label for="id_certificate_authority" class="control-label col-sm-2">Certificate Authority</label>
+                        <div class="col-sm-10">
+                            {{ form.certificate_authority|add_class:"form-control" }}
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            {# Render remaining fields dynamically #}
-            {% for field in form %}
-                {% if field.name != "common_name" %}  {# Skip the common name since it's handled above #}
+            <br/>
+
+            {# Details Card #}
+            <div class="card">
+                <div class="card-header">
+                    Certificate Details
+                </div>
+                <div class="card-body">
+                    {# Serial Number #}
                     <div class="form-group">
-                        <label for="id_{{ field.name }}" class="col-sm-2 control-label">{{ field.label }}</label>
+                        <label for="id_serial_number" class="control-label col-sm-2">Serial Number</label>
                         <div class="col-sm-10">
-                            {{ field }}
-                            {% if field.help_text %}
-                                <span class="help-block">{{ field.help_text }}</span>
-                            {% endif %}
+                            {{ form.serial_number|add_class:"form-control" }}
                         </div>
                     </div>
-                {% endif %}
-            {% endfor %}
+
+                    {# Expiration Date #}
+                    <div class="form-group">
+                        <label for="id_expiration_date" class="control-label col-sm-2">Expiration Date</label>
+                        <div class="col-sm-10">
+                            {{ form.expiration_date|add_class:"form-control" }}
+                        </div>
+                    </div>
+
+                    {# Issue Date #}
+                    <div class="form-group">
+                        <label for="id_issue_date" class="control-label col-sm-2">Issue Date</label>
+                        <div class="col-sm-10">
+                            {{ form.issue_date|add_class:"form-control" }}
+                        </div>
+                    </div>
+
+                    {# SANs #}
+                    <div class="form-group">
+                        <label for="id_san" class="control-label col-sm-2">Subject Alternative Names (SAN)</label>
+                        <div class="col-sm-10">
+                            {{ form.san|add_class:"form-control" }}
+                        </div>
+                    </div>
+
+                    {# Wildcard Checkbox #}
+                    <div class="form-group">
+                        <label for="id_wildcard" class="control-label col-sm-2">Wildcard</label>
+                        <div class="col-sm-10">
+                            {{ form.wildcard|add_class:"form-check-input" }}
+                        </div>
+                    </div>
+
+                    {# Certificate Type #}
+                    <div class="form-group">
+                        <label for="id_type" class="control-label col-sm-2">Certificate Type</label>
+                        <div class="col-sm-10">
+                            {{ form.type|add_class:"form-control" }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <br/>
 
             {# Form buttons (Save, Cancel) #}
             <div class="form-group">
@@ -45,6 +108,7 @@
 
     </div>
 </div>
+
 {# JavaScript to handle the AJAX fetch request #}
 <script>
 document.getElementById('fetch-cert-btn').addEventListener('click', function() {
@@ -72,7 +136,7 @@ document.getElementById('fetch-cert-btn').addEventListener('click', function() {
                 document.getElementById('id_wildcard').checked = data.wildcard;
 
                 // Populate the certificate type (assuming it's a dropdown/select)
-                document.getElementById('id_certificate_type').value = data.certificate_type;
+                document.getElementById('id_type').value = data.type;
 
                 // Populate the SAN field (assuming it's a text input or textarea)
                 document.getElementById('id_san').value = data.san_names.join(', ');

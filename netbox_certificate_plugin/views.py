@@ -41,12 +41,12 @@ def fetch_certificate(request):
             san_names = [name[4:] for name in str(san_extension).split(", ") if name.startswith('DNS:')]
 
         # Determine the certificate type
-        certificate_type = 'standard'  # Default to 'standard'
+        type = 'standard'  # Default to 'standard'
         if '*' in issued_to:
             wildcard = True
-            certificate_type = 'wildcard'
+            type = 'wildcard'
         elif len(san_names) > 1:
-            certificate_type = 'multi-domain'
+            type = 'multi-domain'
 
         # Format the expiration date to a readable format
         expiration_date = f"{expiration_date[:4]}-{expiration_date[4:6]}-{expiration_date[6:8]}"
@@ -60,7 +60,7 @@ def fetch_certificate(request):
             'expiration_date': expiration_date,
             'issue_date': issue_date,
             'wildcard': wildcard,
-            'certificate_type': certificate_type,
+            'type': type,
             'san_names': san_names,
             'fingerprint': fingerprint,  # Return the fingerprint
         })
