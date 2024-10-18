@@ -1,5 +1,7 @@
 # https://github.com/github/gitignore/blob/main/Global/macOS.gitignore
 
+notes
+
 # General
 .DS_Store
 .AppleDouble
