@@ -80,10 +80,13 @@ class HostnameForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # If editing an existing hostname, prepopulate certificates based on relationships
+        # If editing an existing hostname, prepopulate certificate based on relationship
         if self.instance and self.instance.pk:
-            self.fields['certificate'].initial =  models.CertificateHostnameRelationship.objects.filter(hostname=self.instance)
-
+            # Find the related certificate if one exists
+            relationship = models.CertificateHostnameRelationship.objects.filter(hostname=self.instance).first()
+            if relationship:
+                self.fields['certificate'].initial = relationship.certificate
+   
     def save(self, commit=True):
         """
         Override save to handle the certificate-hostname relationships.
