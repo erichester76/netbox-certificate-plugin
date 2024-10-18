@@ -105,7 +105,7 @@ class HostnameForm(forms.ModelForm):
 
         # Create new relationships
         certificate = self.cleaned_data.get('certificate')
-        relationship = models.CertificateHostnameRelationship.objects.filter(hostname=self.instance)        
+        relationship = models.CertificateHostnameRelationship(certificate=certificate, hostname=instance)
         relationship.full_clean()  # Ensure validation is applied
         relationship.save()
     
