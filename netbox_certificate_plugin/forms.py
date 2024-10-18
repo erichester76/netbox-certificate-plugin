@@ -74,7 +74,7 @@ class HostnameForm(forms.ModelForm):
 
     class Meta:
         model = models.Hostname
-        fields = ['name', 'tenant', 'certificatexx']  
+        fields = ['name', 'tenant', 'certificate']  
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
