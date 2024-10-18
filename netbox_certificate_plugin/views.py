@@ -6,6 +6,20 @@ import socket
 from datetime import datetime
 from OpenSSL import crypto  # To process certificates
 
+
+def get_related_objects(instance):
+    """
+    Fetch all related objects dynamically for the given instance.
+    """
+    related_objects = {}
+    for field in instance._meta.get_fields():
+        if field.is_relation and not field.auto_created:
+            related_name = field.related_model._meta.verbose_name_plural
+            related_queryset = getattr(instance, field.related_name_manager_cache).all()
+            if related_queryset.exists():
+                related_objects[related_name] = related_queryset
+    return related_objects
+
 def fetch_certificate(request):
     """
     This view fetches certificate data from the given common name.
@@ -75,6 +89,12 @@ class CertificateListView(generic.ObjectListView):
 
 class CertificateView(generic.ObjectView):
     queryset = models.Certificate.objects.all()
+    
+    def get_extra_context(self, request, instance):
+        related_objects = get_related_objects(instance)
+        return {
+            'related_objects': related_objects,
+        }
 
 class CertificateCreateView(generic.ObjectEditView):
     queryset = models.Certificate.objects.all()
@@ -102,6 +122,12 @@ class CertificateAuthorityListView(generic.ObjectListView):
 
 class CertificateAuthorityView(generic.ObjectView):
     queryset = models.CertificateAuthority.objects.all()
+    
+    def get_extra_context(self, request, instance):
+        related_objects = get_related_objects(instance)
+        return {
+            'related_objects': related_objects,
+        }
 
 class CertificateAuthorityCreateView(generic.ObjectEditView):
     queryset = models.CertificateAuthority.objects.all()
@@ -136,6 +162,15 @@ class HostnameView(generic.ObjectView):
 
         return {
             'related_certificates': related_certificates
+        }
+        
+    def get_extra_context(self, request, instance):
+        related_objects = get_related_objects(instance)
+        related_certificates = models.CertificateHostnameRelationship.objects.filter(hostname=instance).select_related('certificate')
+
+        return {
+            'related_certificates': related_certificates,
+            'related_objects': related_objects,
         }
 
 class HostnameCreateView(generic.ObjectEditView):
