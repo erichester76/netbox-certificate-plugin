@@ -1,4 +1,5 @@
 {% extends 'generic/object_edit.html' %}
+{% load i18n %}
 
 {% block content %}
   <div class="tab-pane show active" id="edit-form" role="tabpanel" aria-labelledby="object-list-tab">
@@ -40,13 +41,13 @@
   </div>
 <script>
 document.getElementById('id_common_name').addEventListener('blur', fetchCertificate);
-/* document.getElementById('id_common_name').addEventListener('keydown', function (event) {
+document.getElementById('id_common_name').addEventListener('keydown', function (event) {
     // Trigger on Enter or Tab
     if (event.key === 'Enter' || event.key === 'Tab') {
         event.preventDefault();  // Prevent form submission or focus change on Enter
         fetchCertificate();
     }
-}); */
+});
 
 function fetchCertificate() {
     const commonName = document.getElementById('id_common_name').value;
