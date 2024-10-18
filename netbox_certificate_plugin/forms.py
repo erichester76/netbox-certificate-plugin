@@ -1,5 +1,4 @@
 from django import forms
-from utilities.forms import BootstrapMixin
 from netbox.forms import NetBoxModelForm, NetBoxModelFilterSetForm, NetBoxModelImportForm
 from django.core.exceptions import ValidationError  # Import ValidationError
 from . import models
