@@ -2,7 +2,9 @@
 
 {# JavaScript to handle the AJAX fetch request #}
 <script>
-document.getElementById('fetch-cert-btn').addEventListener('click', function() {
+document.getElementById('id_common_name').addEventListener('blur', fetchCertificate);
+
+function fetchCertificate() {
     const commonName = document.getElementById('id_common_name').value;
 
     if (!commonName) {
@@ -37,6 +39,6 @@ document.getElementById('fetch-cert-btn').addEventListener('click', function() {
             }
         })
         .catch(error => console.error('Error fetching certificate:', error));
-});
+}
 
 </script>
