@@ -21,7 +21,7 @@ class CertificateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Certificate
-        fields = ['id', 'common_name', 'expiration_date', 'certificate_type', 'hostnames']
+        fields = ['id', 'common_name', 'expiration_date', 'type', 'hostnames']
 
     def get_hostnames(self, obj):
         # Fetch related hostnames from the CertificateHostnameRelationship table
