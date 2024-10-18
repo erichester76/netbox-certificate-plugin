@@ -105,7 +105,7 @@ class Certificate(NetBoxModel):
         ordering = ['expiration_date', 'name']
 
     def __str__(self):
-        return self.name
+        return f"{self.common_name} - {self.type}"
 
     def get_absolute_url(self):
         return reverse('plugins:netbox_certificate_plugin:certificate', kwargs={'pk': self.pk})
