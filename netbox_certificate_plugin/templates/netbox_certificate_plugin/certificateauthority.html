@@ -17,8 +17,41 @@
         </table>
       </div>
       {% include 'inc/panels/custom_fields.html' %}
-      {% include 'inc/panels/related_objects.html' %}
-    </div>
+      <div class="card">
+      <h5 class="card-header">Related Certificates</h5>
+      <div class="card-body">
+          {% if object.related_certificates.all %}
+              <table class="table table-hover">
+                  <thead>
+                      <tr>
+                          <th>Common Name</th>
+                          <th>Expiration Date</th>
+                          <th>Type</th>
+                          <th>Actions</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      {% for certificate in object.related_certificates.all %}
+                          <tr>
+                              <td>
+                                  <a href="{% url 'plugins:netbox_certificate_plugin:certificate' pk=certificate.pk %}">
+                                      {{ certificate.common_name }}
+                                  </a>
+                              </td>
+                              <td>{{ certificate.expiration_date }}</td>
+                              <td>{{ certificate.get_type_display }}</td>
+                              <td>
+                                  <a href="{% url 'plugins:netbox_certificate_plugin:certificate_changelog' pk=certificate.pk %}" class="btn btn-sm btn-info">View Change Log</a>
+                              </td>
+                          </tr>
+                      {% endfor %}
+                  </tbody>
+              </table>
+          {% else %}
+              <p>No related certificates found.</p>
+          {% endif %}
+      </div>
+  </div>    </div>
     <div class="col col-md-6">
       {% include 'inc/panels/tags.html' %}
       {% include 'inc/panels/comments.html' %}
