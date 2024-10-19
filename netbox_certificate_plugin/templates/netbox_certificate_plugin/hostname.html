@@ -26,15 +26,17 @@
                         <th>CN</th>
                         <th>certificate Authority</tg>
                         <th>Type</th>
-                        <th>expiration_date</th>
+                        <th>Issue Date</th>
+                        <th>Expiration Date</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for rel in related_certificates %}
                         <tr>
                           <td><a href="{{ rel.certificate.get_absolute_url }}">{{ rel.certificate.common_name }}</a></td>
-                          <td>{{ rel.certificate.certificate_authority }}</td>
+                          <td><a href="{{ rel.certificate_authority.get_absolute_url }}">{{ rel.certificate_authority }}</a></td>
                           <td>{{ rel.certificate.type }}</td>
+                          <td>{{ rel.certificate.issue_date }}</td>
                           <td>{{ rel.certificate.expiration_date }}</td>
                         </tr>
                     {% empty %}
