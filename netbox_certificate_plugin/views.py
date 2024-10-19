@@ -80,7 +80,7 @@ class CertificateView(generic.ObjectView):
     queryset = models.Certificate.objects.all()   
 
     def get_extra_context(self, request, instance):
-        related_hostnames = models.CertificateHostnameRelationship.objects.filter(certificate=instance).select_related('hostname_relationships')
+        related_hostnames = models.CertificateHostnameRelationship.objects.filter(certificate=instance).select_related('hostname')
 
         return {
             'related_hostnames': related_hostnames,
@@ -147,7 +147,7 @@ class HostnameView(generic.ObjectView):
     queryset = models.Hostname.objects.all()
 
     def get_extra_context(self, request, instance):
-        related_certificates = models.CertificateHostnameRelationship.objects.filter(hostname=instance).select_related('certificate_relationships')
+        related_certificates = models.CertificateHostnameRelationship.objects.filter(hostname=instance).select_related('certificate')
 
         return {
             'related_certificates': related_certificates,
