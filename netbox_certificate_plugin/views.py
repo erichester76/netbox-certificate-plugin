@@ -34,7 +34,7 @@ def fetch_certificate(request):
             ext = x509.get_extension(i)
             if ext.get_short_name().decode('utf-8') == 'subjectAltName':
                 san_extension = ext
-                san_names = [name[4:] for name in str(san_extension).split(", ") if name.startswith('DNS:')]
+                san_names = [name[4:] for name in str(san_extension).split(", ") if name.startswith('DNS')]
                 break
 
         # Determine the certificate type
@@ -42,15 +42,16 @@ def fetch_certificate(request):
         cert_type = 'standard'  # Default to 'standard'
         
         # Check for wildcards in both issued_to and SANs
-        if '*' in issued_to:
+        if len(san_names) > 1:
+            cert_type = 'multi-domain'
+        elif '*' in issued_to:
             wildcard = True
             cert_type = 'wildcard'
         elif any('*' in san for san in san_names):
             wildcard = True
             issued_to = next(san for san in san_names if '*' in san)  # Set issued_to to the wildcard from SANs
             cert_type = 'wildcard'
-        elif len(san_names) > 1:
-            cert_type = 'multi-domain'
+
             
         # Format the expiration date to a readable format
         expiration_date = f"{expiration_date[:4]}-{expiration_date[4:6]}-{expiration_date[6:8]}"
