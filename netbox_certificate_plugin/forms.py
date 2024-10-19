@@ -119,7 +119,7 @@ class HostnameForm(forms.ModelForm):
 class CertificateImportForm(NetBoxModelImportForm):
     class Meta:
         model = models.Certificate
-        fields = ['name', 'type', 'common_name', 'san', 'certificate_authority', 'issue_date', 'expiration_date']
+        fields = ['type', 'common_name', 'san', 'certificate_authority', 'issue_date', 'expiration_date']
 
 class CertificateAuthorityImportForm(NetBoxModelImportForm):
     class Meta:
