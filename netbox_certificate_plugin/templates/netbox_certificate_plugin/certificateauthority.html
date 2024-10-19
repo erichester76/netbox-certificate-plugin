@@ -37,11 +37,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for rel in object.certificate_authority.all() %}
+                    {% for cert in related_certificates %}
                         <tr>
-                          <td><a href="{{ rel.get_absolute_url }}">{{ rel.common_name }}</a></td>
-                          <td>{{ rel.type }}</td>
-                          <td>{{ rel.expiration_date }}</td>
+                          <td><a href="{{ cert.get_absolute_url }}">{{ cert.common_name }}</a></td>
+                          <td>{{ cert.type }}</td>
+                          <td>{{ cert.expiration_date }}</td>
                         </tr>
                     {% empty %}
                         <tr>

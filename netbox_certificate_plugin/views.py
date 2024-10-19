@@ -113,6 +113,14 @@ class CertificateAuthorityListView(generic.ObjectListView):
 class CertificateAuthorityView(generic.ObjectView):
     queryset = models.CertificateAuthority.objects.all()
 
+    def get_extra_context(self, request, instance):
+        # Fetch all certificates associated with this certificate authority
+        related_certificates = models.Certificate.objects.filter(certificate_authority=instance)
+
+        return {
+            'related_certificates': related_certificates,
+        }
+
 class CertificateAuthorityCreateView(generic.ObjectEditView):
     queryset = models.CertificateAuthority.objects.all()
     form = forms.CertificateAuthorityForm
