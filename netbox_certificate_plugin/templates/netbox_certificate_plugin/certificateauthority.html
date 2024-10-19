@@ -18,36 +18,35 @@
       </div>
       {% include 'inc/panels/custom_fields.html' %}
       <div class="card">
-      <h5 class="card-header">Related Certificates</h5>
-      <div class="card-body">
-          {% if object.related_certificates.all %}
-              <table class="table table-hover">
-                  <thead>
-                      <tr>
-                          <th>Common Name</th>
-                          <th>Type</th>
-                          <th>Expiration Date</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                      {% for certificate in object.related_certificates.all %}
-                          <tr>
-                              <td>
-                                  <a href="{% url 'plugins:netbox_certificate_plugin:certificate' pk=certificate.pk %}">
-                                      {{ certificate.common_name }}
-                                  </a>
-                              </td>
-                              <td>{{ certificate.get_type_display }}</td>
-                              <td>{{ certificate.expiration_date }}</td>
-                          </tr>
-                      {% endfor %}
-                  </tbody>
-              </table>
-          {% else %}
-              <p>No related certificates found.</p>
-          {% endif %}
+        <h5 class="card-header">Related Certificates</h5>
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>CN</th>
+                        <th>certificate Authority</tg>
+                        <th>Type</th>
+                        <th>expiration_date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for rel in related_certificates %}
+                        <tr>
+                          <td><a href="{{ rel.certificate.get_absolute_url }}">{{ rel.certificate.common_name }}</a></td>
+                          <td>{{ rel.certificate.certifcate_authority }}</td>
+                          <td>{{ rel.certificate.get_display_type }}</td>
+                          <td>{{ rel.certificate.expiration_date }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="1">No related certificates found.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
       </div>
-  </div>    </div>
+  </div>   
     <div class="col col-md-6">
       {% include 'inc/panels/tags.html' %}
       {% include 'inc/panels/comments.html' %}
