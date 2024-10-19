@@ -35,7 +35,7 @@
                         <tr>
                           <td><a href="{{ rel.certificate.get_absolute_url }}">{{ rel.certificate.common_name }}</a></td>
                           <td><a href="{{ rel.certificate_authority.get_absolute_url }}">{{ rel.certificate_authority }}</a></td>
-                          <td>{{ rel.certificate.type }}</td>
+                          <td>{{ rel.certificate.type|title }}</td>
                           <td>{{ rel.certificate.issue_date }}</td>
                           <td>{{ rel.certificate.expiration_date }}</td>
                         </tr>

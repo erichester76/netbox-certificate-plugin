@@ -15,8 +15,8 @@
             <td>{{ object.name }}</td>
           </tr>
           <tr>
-            <th scope="row"></th>Managed By</th>
-            <td>{{ object.managed_by }}</td>
+            <th scope="row">Managed By</th>
+            <td>{{ object.managed_by|title }}</td>
           </tr>
           <tr>
             <th scope="row">Auto Renew</th></th>
@@ -40,7 +40,7 @@
                     {% for cert in related_certificates %}
                         <tr>
                           <td><a href="{{ cert.get_absolute_url }}">{{ cert.common_name }}</a></td>
-                          <td>{{ cert.type }}</td>
+                          <td>{{ cert.type|title }}</td>
                           <td>{{ cert.expiration_date }}</td>
                         </tr>
                     {% empty %}
