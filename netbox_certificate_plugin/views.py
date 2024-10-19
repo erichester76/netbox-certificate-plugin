@@ -24,7 +24,7 @@ def fetch_certificate(request):
         # Extract data from the certificate
         issued_to = x509.get_subject().CN  # Common Name
         issued_by = x509.get_issuer().CN  # Issuer CN
-        serial_number = x509.get_serial_number()  # Serial Number
+        serial_number = ':'.join(f'{x509.get_serial_number():02X}'[i:i+2] for i in range(0, len(f'{x509.get_serial_number():02X}'), 2))
         expiration_date = x509.get_notAfter().decode('utf-8')  # Expiration date in bytes
         issue_date = x509.get_notBefore().decode('utf-8')  # Issue date in bytes
         fingerprint = x509.digest('sha256').decode('utf-8')  # Fingerprint using SHA-256
