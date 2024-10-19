@@ -108,7 +108,7 @@ class Certificate(NetBoxModel):
     tenant = models.ForeignKey(Tenant, on_delete=models.SET_NULL, null=True, blank=True, related_name="certificates")
 
     class Meta:
-        ordering = ['expiration_date', 'name']
+        ordering = ['expiration_date', 'common_name']
 
     def __str__(self):
         return f"{self.common_name} - {self.type}"
