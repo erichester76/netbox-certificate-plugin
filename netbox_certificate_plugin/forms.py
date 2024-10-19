@@ -43,7 +43,7 @@ class CertificateForm(forms.ModelForm):
 
     class Meta:
         model = models.Certificate
-        fields = ['common_name', 'type', 'san', 'certificate_authority', 'tenant', 'issue_date', 'expiration_date', 'fingerprint'] 
+        fields = ['common_name', 'type', 'san', 'certificate_authority', 'tenant', 'issue_date', 'expiration_date', 'serial_number', 'fingerprint'] 
 
     def clean(self):
         cleaned_data = super().clean()
