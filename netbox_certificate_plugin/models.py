@@ -89,22 +89,6 @@ class Certificate(NetBoxModel):
     )    
     fingerprint = models.CharField(max_length=255, help_text="Certificate Fingerprint")
 
-    # Key properties
-    key_size = models.PositiveIntegerField(null=True, blank=True, help_text="Size of the certificate key (e.g. 2048, 4096)")
-    signature_algorithm = models.CharField(max_length=50, null=True, blank=True)
-
-    # Usage and revocation information
-    key_usage = models.TextField(null=True, blank=True, help_text="Comma-separated list of key usages (e.g. digitalSignature, keyEncipherment)")
-    extended_key_usage = models.TextField(null=True, blank=True, help_text="Extended purposes (e.g. serverAuth, clientAuth)")
-    revocation_status = models.BooleanField(default=False, help_text="Indicates if the certificate is revoked")
-    crl_distribution_points = models.TextField(null=True, blank=True, help_text="URLs for CRL Distribution Points")
-    ocsp_url = models.URLField(null=True, blank=True, help_text="URL for OCSP revocation check")
-
-    # Optional fields
-    contact_email = models.EmailField(null=True, blank=True, help_text="Email address for renewal notifications")
-    renewal_notification_date = models.DateField(null=True, blank=True, help_text="Date to remind for certificate renewal")
-
-    # Relations
     tenant = models.ForeignKey(Tenant, on_delete=models.SET_NULL, null=True, blank=True, related_name="certificates")
 
     class Meta:
