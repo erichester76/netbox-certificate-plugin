@@ -36,39 +36,32 @@
           </tr>
           <th scope="row">Fingerprint</th></th>
           <td>{{ object.fingerprint }}</td>
-          </tr>
-            <th scope="row">ACME</th></th>
-            <td>{{ object.amce }}</td>
-          </tr>
         </table>
       </div>
       {% include 'inc/panels/custom_fields.html' %}
       <div class="card">
         <h5 class="card-header">Related Hostnames</h5>
         <div class="card-body">
-            {% if object.related_hostnames.all %}
-                <table class="table table-hover">
-                    <thead>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>FQDN</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for rel in related_hostnames %}
                         <tr>
-                            <th>FQDN</th>
+                            <td><a href="{{ rel.hostname.get_absolute_url }}">{{ rel.hostname }}</a></td>
                         </tr>
-                    </thead>
-                    <tbody>
-                       {% for rel in related_hostnames %}
-                            <tr>
-                                <td><a href="{{ rel.hostname.get_absolute_url }}">{{ rel.hostname }}</a></td>
-                            </tr>
-                            {% empty %}
-                            <tr>
-                                <td colspan="1">No related hostnames found.</td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            {% else %}
-                <p>No related hostnames found.</p>
-            {% endif %}
+                    {% empty %}
+                        <tr>
+                            <td colspan="1">No related hostnames found.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
+      </div>
     </div>
     <div class="col col-md-6">
       {% include 'inc/panels/tags.html' %}
