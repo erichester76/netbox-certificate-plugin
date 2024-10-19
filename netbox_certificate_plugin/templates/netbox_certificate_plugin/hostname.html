@@ -20,7 +20,7 @@
       <div class="card">
         <h5 class="card-header">Related Certificates</h5>
         <div class="card-body">
-            {% if object.certificates.all %}
+            {% if object.related_certificates.all %}
                 <table class="table table-hover">
                     <thead>
                         <tr>
@@ -31,7 +31,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for certificate in object.certificates.all %}
+                        {% for certificate in object.related_certificates.all %}
                             <tr>
                                 <td>
                                     <a href="{% url 'plugins:netbox_certificate_plugin:certificate' pk=certificate.pk %}">
