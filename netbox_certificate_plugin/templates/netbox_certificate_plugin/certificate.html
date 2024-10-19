@@ -34,8 +34,10 @@
             <th scope="row">Expriation Date</th></th>
             <td>{{ object.expiration_date }}</td>
           </tr>
-          <th scope="row">Fingerprint</th></th>
-          <td>{{ object.fingerprint }}</td>
+          <tr>
+            <th scope="row">Fingerprint</th></th>
+            <td>{{ object.fingerprint }}</td>
+          </tr>
         </table>
       </div>
       {% include 'inc/panels/custom_fields.html' %}

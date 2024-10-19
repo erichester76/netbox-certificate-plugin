@@ -7,12 +7,20 @@
     <div class="col col-md-6">
       <div class="card">
 
-        <h5 class="card-header">Certififcate Authorities</h5>
+        <h5 class="card-header">Certififcate Authority</h5>
 
         <table class="table table-hover attr-table">
           <tr>
             <th scope="row">Name</th>
             <td>{{ object.name }}</td>
+          </tr>
+          <tr>
+            <th scope="row"></th>Managed By</th>
+            <td>{{ object.managed_by }}</td>
+          </tr>
+          <tr>
+            <th scope="row">Auto Renew</th></th>
+            <td>{{ object.auto_renew }}</td>
           </tr>
         </table>
       </div>
@@ -24,18 +32,16 @@
                 <thead>
                     <tr>
                         <th>CN</th>
-                        <th>certificate Authority</tg>
                         <th>Type</th>
                         <th>expiration_date</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for rel in related_certificates %}
+                    {% for rel in object.certificate_authority.all() %}
                         <tr>
-                          <td><a href="{{ rel.certificate.get_absolute_url }}">{{ rel.certificate.common_name }}</a></td>
-                          <td>{{ rel.certificate.certifcate_authority }}</td>
-                          <td>{{ rel.certificate.get_display_type }}</td>
-                          <td>{{ rel.certificate.expiration_date }}</td>
+                          <td><a href="{{ rel.get_absolute_url }}">{{ rel.common_name }}</a></td>
+                          <td>{{ rel.type }}</td>
+                          <td>{{ rel.expiration_date }}</td>
                         </tr>
                     {% empty %}
                         <tr>
