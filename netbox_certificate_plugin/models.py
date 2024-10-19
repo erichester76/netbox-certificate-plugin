@@ -87,7 +87,7 @@ class Certificate(NetBoxModel):
         related_name="certificates",
         help_text="The Certificate Authority that issued the certificate"
     )    
-    fingerprint = models.CharField(max_length=255, help_text="Certificate fingerprint")
+    fingerprint = models.CharField(max_length=255, help_text="Certificate Fingerprint")
 
     # Key properties
     key_size = models.PositiveIntegerField(null=True, blank=True, help_text="Size of the certificate key (e.g. 2048, 4096)")

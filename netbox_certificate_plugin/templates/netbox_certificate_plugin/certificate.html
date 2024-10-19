@@ -13,6 +13,10 @@
           <tr>
             <th scope="row">CN</th></th>
             <td>{{ object.common_name }}</td>
+          </tr>          
+          <tr>
+            <th scope="row">Type</th></th>
+            <td>{{ object.type|title }}</td>
           </tr>
           <tr>
             <th scope="row">Alternative SANs</th></th>
@@ -23,8 +27,8 @@
             <td><a href="{{ object.certificate_authority.get_absolute_url }}">{{ object.certificate_authority }}</a></td>
           </tr>
           <tr>
-            <th scope="row">Type</th></th>
-            <td>{{ object.type|title }}</td>
+            <th scope="row">Tenant</th></th>
+            <td><a href="{{ object.tenant.get_absolute_url }}">{{ object.tenant }}</a></td>
           </tr>
           <tr>
             <th scope="row">Issue Date</th></th>
