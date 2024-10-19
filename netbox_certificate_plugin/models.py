@@ -103,6 +103,12 @@ class Certificate(NetBoxModel):
     def san_list(self):
         """ Returns the SANs as a list for easy comparison """
         return [san.strip() for san in self.san.split(",")] if self.san else []
+    
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        
+    def delete(self, *args, **kwargs):
+        super().delete(*args, **kwargs)
 
 class CertificateHostnameRelationship(models.Model):
     certificate = models.ForeignKey(Certificate, on_delete=models.CASCADE, related_name="hostname_relationships")
