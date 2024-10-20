@@ -53,6 +53,6 @@ items = (
 
 menu = PluginMenu(
     label="Certificate Management",
-    groups=(("Certificate MANAGEMENT", items),),
+    groups=(("CERTIFICATE MANAGEMENT", items),),
     icon_class="mdi mdi-domain",
 )
